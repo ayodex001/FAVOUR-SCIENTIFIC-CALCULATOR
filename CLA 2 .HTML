@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FAVOUR SCIENTIFIC CALCULATOR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#161b22;
+    --btn:#21262d;
+    --btn‑hover:#30363d;
+    --op:#f85149;
+    --func:#58a6ff;
+    --eq:#238636;
+    --txt:#c9d1d9;
+    --mem:#ffa657;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#ffffff;
+      --panel:#f6f8fa;
+      --btn:#e1e4e8;
+      --btn‑hover:#d1d5da;
+      --op:#d73a49;
+      --func:#0366d6;
+      --eq:#28a745;
+      --txt:#24292e;
+      --mem:#f66a0a;
+    }
+  }
+  body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column;align-items:center;padding:20px;}
+  .calc{max-width:420px;width:100%;background:var(--panel);border-radius:16px;padding:16px;box-shadow:0 12px 24px rgba(0,0,0,.4);}
+  .display{background:#000;color:#0f0;font:2rem/1.2 monospace;padding:12px 16px;border-radius:8px;margin-bottom:12px;text-align:right;overflow-x:auto;white-space:nowrap;}
+  .history{max-height:120px;overflow-y:auto;background:rgba(0,0,0,.2);padding:8px;border-radius:6px;margin-bottom:12px;font-size:0.9rem;}
+  .history div{cursor:pointer;padding:2px 4px;border-radius:4px;}
+  .history div:hover{background:rgba(255,255,255,.1);}
+  .keys{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
+  button{font-weight:600;font-size:1.1rem;padding:12px 8px;border:none;border-radius:8px;background:var(--btn);color:var(--txt);cursor:pointer;transition:.15s;}
+  button:hover{background:var(--btn‑hover);}
+  button:active{transform:scale(.96);}
+  .op{background:var(--op);color:#fff;}
+  .func{background:var(--func);color:#fff;}
+  .eq{background:var(--eq);color:#fff;grid-column:span 2;}
+  .mem{background:var(--mem);color:#fff;}
+  .zero{grid-column:span 2;}
+  .small{font-size:0.9rem;}
+</style>
+</head>
+<body>
+
+<div class="calc">
+  <div class="display" id="disp">0</div>
+  <div class="history" id="hist"></div>
+
+  <div class="keys">
+    <!-- Row 1 -->
+    <button class="mem" onclick="memOp('MC')">MC</button>
+    <button class="mem" onclick="memOp('MR')">MR</button>
+    <button class="mem" onclick="memOp('M+')">M+</button>
+    <button class="mem" onclick="memOp('M-')">M-</button>
+    <button class="func" onclick="append('π')">π</button>
+    <button class="func" onclick="append('e')">e</button>
+
+    <!-- Row 2 -->
+    <button class="func small" onclick="trig('sin')">sin</button>
+    <button class="func small" onclick="trig('cos')">cos</button>
+    <button class="func small" onclick="trig('tan')">tan</button>
+    <button class="func small" onclick="invTrig('asin')">sin⁻¹</button>
+    <button class="func small" onclick="invTrig('acos')">cos⁻¹</button>
+    <button class="func small" onclick="invTrig('atan')">tan⁻¹</button>
+
+    <!-- Row 3 -->
+    <button class="func small" onclick="hyper('sinh')">sinh</button>
+    <button class="func small" onclick="hyper('cosh')">cosh</button>
+    <button class="func small" onclick="hyper('tanh')">tanh</button>
+    <button class="func small" onclick="log('log10')">log₁₀</button>
+    <button class="func small" onclick="log('ln')">ln</button>
+    <button class="func small" onclick="log('log2')">log₂</button>
+
+    <!-- Row 4 -->
+    <button class="func" onclick="append('(')">(</button>
+    <button class="func" onclick="append(')')">)</button>
+    <button class="func" onclick="append('!')">n!</button>
+    <button class="func" onclick="root('sqrt')">√</button>
+    <button class="func" onclick="root('cbrt')">∛</button>
+    <button class="func" onclick="pow()">xʸ</button>
+
+    <!-- Row 5 -->
+    <button class="func" onclick="append('P')">P</button>
+    <button class="func" onclick="append('C')">C</button>
+    <button class="func" onclick="degRad()">°/rad</button>
+    <button class="func" onclick="append('φ')">φ</button>
+    <button class="func" onclick="append('τ')">τ</button>
+    <button class="op" onclick="clearAll()">C</button>
+
+    <!-- Row 6 -->
+    <button onclick="append('7')">7</button>
+    <button onclick="append('8')">8</button>
+    <button onclick="append('9')">9</button>
+    <button class="op" onclick="append('/')">/</button>
+    <button class="op" onclick="del()">←</button>
+    <button class="op" onclick="append('%')">%</button>
+
+    <!-- Row 7 -->
+    <button onclick="append('4')">4</button>
+    <button onclick="append('5')">5</button>
+    <button onclick="append('6')">6</button>
+    <button class="op" onclick="append('*')">×</button>
+    <button class="op" onclick="append('^')">^</button>
+    <button class="op" onclick="append('EE')">EE</button>
+
+    <!-- Row 8 -->
+    <button onclick="append('1')">1</button>
+    <button onclick="append('2')">2</button>
+    <button onclick="append('3')">3</button>
+    <button class="op" onclick="append('-')">−</button>
+    <button class="op" onclick="append('+')">+</button>
+    <button class="eq" onclick="calc()">=</button>
+
+    <!-- Row 9 -->
+    <button class="zero" onclick="append('0')">0</button>
+    <button onclick="append('.')">.</button>
+  </div>
+</div>
+
+<script>
+/* ---------- STATE ---------- */
+let memory = 0;
+let inRadians = true;
+const hist = document.getElementById('hist');
+const disp = document.getElementById('disp');
+
+/* ---------- DISPLAY ---------- */
+function updateDisplay(val){
+  disp.textContent = val === '' ? '0' : val;
+}
+function append(ch){
+  if(disp.textContent==='0' && !'[.+*/^('.includes(ch)) disp.textContent='';
+  disp.textContent += ch;
+}
+function del(){
+  const s = disp.textContent;
+  disp.textContent = s.slice(0,-1) || '0';
+}
+function clearAll(){
+  updateDisplay('');
+}
+
+/* ---------- MEMORY ---------- */
+function memOp(op){
+  const cur = parseFloat(disp.textContent)||0;
+  switch(op){
+    case 'MC': memory=0; break;
+    case 'MR': updateDisplay(memory); break;
+    case 'M+': memory+=cur; break;
+    case 'M-': memory-=cur; break;
+  }
+}
+
+/* ---------- MODE ---------- */
+function degRad(){
+  inRadians = !inRadians;
+  addHistory(`Mode → ${inRadians?'rad':'deg'}`);
+}
+
+/* ---------- TRIG ---------- */
+function trig(fn){
+  const val = parseFloat(disp.textContent)||0;
+  const rad = inRadians ? val : val*Math.PI/180;
+  const res = Math[fn](rad);
+  updateDisplay(res);
+  addHistory(`${fn}(${val}${inRadians?'rad':'°'}) = ${res}`);
+}
+function invTrig(fn){
+  const val = parseFloat(disp.textContent)||0;
+  let res = Math[fn](val);
+  if(!inRadians) res = res*180/Math.PI;
+  updateDisplay(res);
+  addHistory(`${fn}⁻¹(${val}) = ${res}${!inRadians?'°':''}`);
+}
+
+/* ---------- HYPERBOLIC ---------- */
+function hyper(fn){
+  const val = parseFloat(disp.textContent)||0;
+  const res = Math[fn](val);
+  updateDisplay(res);
+  addHistory(`${fn}(${val}) = ${res}`);
+}
+
+/* ---------- LOGS ---------- */
+function log(fn){
+  const val = parseFloat(disp.textContent)||0;
+  let res;
+  if(fn==='ln') res=Math.log(val);
+  else if(fn==='log10') res=Math.log10(val);
+  else if(fn==='log2') res=Math.log2(val);
+  updateDisplay(res);
+  addHistory(`${fn}(${val}) = ${res}`);
+}
+
+/* ---------- ROOTS & POWER ---------- */
+function root(fn){
+  const val = parseFloat(disp.textContent)||0;
+  const res = fn==='sqrt'?Math.sqrt(val):Math.cbrt(val);
+  updateDisplay(res);
+  addHistory(`${fn==='sqrt'?'√':'∛'}(${val}) = ${res}`);
+}
+function pow(){
+  append('^');
+}
+
+/* ---------- FACTORIAL ---------- */
+function factorial(n){
+  if(n<0 || !Number.isInteger(n)) return NaN;
+  if(n===0||n===1) return 1;
+  let r=1;
+  for(let i=2;i<=n;i++) r*=i;
+  return r;
+}
+
+/* ---------- PERM & COMB ---------- */
+function perm(n,r){
+  if(n<r||n<0||r<0) return NaN;
+  return factorial(n)/factorial(n-r);
+}
+function comb(n,r){
+  if(n<r||n<0||r<0) return NaN;
+  return factorial(n)/(factorial(r)*factorial(n-r));
+}
+
+/* ---------- HISTORY ---------- */
+function addHistory(txt){
+  const div=document.createElement('div');
+  div.textContent=txt;
+  div.onclick=()=>{ updateDisplay(div.textContent.split(' = ')[0]); };
+  hist.prepend(div);
+  if(hist.children.length>30) hist.removeChild(hist.lastChild);
+}
+
+/* ---------- SAFE EVAL ---------- */
+function safeEval(expr){
+  // Replace UI symbols
+  expr = expr.replace(/×/g,'*').replace(/−/g,'-').replace(/π/g,Math.PI)
+             .replace(/e/g,Math.E).replace(/φ/g,(1+Math.sqrt(5))/2)
+             .replace(/τ/g,2*Math.PI);
+
+  // Handle xʸ
+  expr = expr.replace(/(\d+\.?\d*)\^/g,'Math.pow($1,');
+
+  // Handle n!
+  expr = expr.replace(/(\d+)\!/g,(m,p)=>`factorial(${p})`);
+
+  // Handle P(n,r) and C(n,r)
+  expr = expr.replace(/(\d+)\s*P\s*\(\s*(\d+)\s*\)/g,(m,n,r)=>`perm(${n},${r})`);
+  expr = expr.replace(/(\d+)\s*C\s*\(\s*(\d+)\s*\)/g,(m,n,r)=>`comb(${n},${r})`);
+
+  // EE notation (5EE3 = 5e3)
+  expr = expr.replace(/(\d+\.?\d*)EE([\d+-]+)/g,(m,a,b)=>`${a}e${b}`);
+
+  // Build safe function
+  const code = `"use strict";const factorial=${factorial};const perm=${perm};const comb=${comb};return(${expr})`;
+  return Function(code)();
+}
+
+/* ---------- CALC ---------- */
+function calc(){
+  let expr = disp.textContent.trim();
+  if(!expr) return;
+  try{
+    const result = safeEval(expr);
+    const out = Number.isFinite(result)?result:'Error';
+    addHistory(`${expr} = ${out}`);
+    updateDisplay(out);
+  }catch(e){
+    addHistory(`${expr} → Error`);
+    updateDisplay('Error');
+  }
+}
+
+/* ---------- KEYBOARD ---------- */
+document.addEventListener('keydown',e=>{
+  if(e.key>='0'&&e.key<='9' || e.key==='.') append(e.key);
+  else if(['+','-','*','/'].includes(e.key)) append(e.key);
+  else if(e.key==='Enter') calc();
+  else if(e.key==='Backspace') del();
+  else if(e.key==='Escape') clearAll();
+});
+
+/* ---------- INIT ---------- */
+updateDisplay('0');
+</script>
+</body>
+</html>
